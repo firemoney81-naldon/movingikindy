@@ -1,23 +1,461 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <title>Home</title>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
-    <!--
-      Need a visual blank slate?
-      Remove all code in `styles.css`!
-    -->
-    <link rel="stylesheet" href="styles.css" />
-    <script type="module" src="script.js"></script>
-  </head>
-  <body>
-    <nav>
-      <a href="/" aria-current="page">Home</a>
-      <a href="/page2.html">Other page</a>
-    </nav>
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "MovingCompany",
+      "name": "서울이삿짐센터",
+      "description": "서울 전 지역을 커버하는 이삿짐센터 전문가. 포장이사, 사무실이사, 원룸이사 등 맞춤형 이사 솔루션을 제공합니다.",
+      "url": "https://www.서울이삿짐센터.com",
+      "telephone": "+82-2-1234-5678",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "서울특별시",
+        "addressRegion": "서울특별시",
+        "streetAddress": "서울 전 지역 서비스 가능"
+      },
+      "sameAs": [
+        "https://www.facebook.com/seoulmovingcompany",
+        "https://instagram.com/seoulmoving",
+        "https://www.youtube.com/seoulmovingtv"
+      ],
+      "serviceType": [
+        "포장이사",
+        "사무실이사",
+        "원룸이사",
+        "가정이사",
+        "보관이사"
+      ]
+    }
+    </script>
+
+    <style>
+      /* 기본 리셋 */
+      * {
+        margin: 0; padding: 0; box-sizing: border-box;
+      }
+      body {
+        font-family: 'Noto Sans KR', sans-serif;
+        line-height: 1.8; /* 가독성을 위해 라인 높이 증가 */
+        color: #333;
+        background-color: #fcfcfc; /* 밝은 배경 */
+      }
+      a {
+        color: #007bff;
+        text-decoration: none;
+        transition: color 0.3s ease;
+      }
+      a:hover, a:focus {
+        color: #0056b3;
+        text-decoration: underline;
+      }
+
+      header {
+        background-color: #ffffff;
+        border-bottom: 3px solid #e0e0e0;
+        padding: 25px 15px;
+        text-align: center;
+      }
+      header h1 {
+        font-size: 2.5rem;
+        color: #004d40;
+        margin-bottom: 15px;
+        font-weight: 700;
+      }
+      nav ul {
+        list-style: none;
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        font-weight: 500;
+      }
+      nav ul li a {
+        color: #555;
+        font-size: 1.1rem;
+        padding: 10px 15px;
+        border-radius: 6px;
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
+      nav ul li a:hover {
+        background-color: #e0f2f1;
+        color: #004d40;
+      }
+
+      main {
+        max-width: 1000px;
+        margin: 40px auto;
+        padding: 0 20px;
+        background: white;
+        box-shadow: 0 4px 20px rgb(0 0 0 / 0.05);
+        border-radius: 12px;
+      }
+
+      section {
+        padding: 30px 0;
+        border-bottom: 1px dashed #eee;
+      }
+      section:last-child {
+        border-bottom: none;
+      }
+      h2 {
+        color: #004d40;
+        margin-bottom: 20px;
+        font-size: 2.2rem;
+        font-weight: 700;
+        border-left: 5px solid #81c784;
+        padding-left: 15px;
+      }
+      h3 {
+        color: #388e3c;
+        margin-top: 25px;
+        margin-bottom: 15px;
+        font-size: 1.6rem;
+        font-weight: 600;
+        border-bottom: 2px solid #e0f2f1;
+        padding-bottom: 5px;
+      }
+      h4 {
+        color: #555;
+        margin-top: 15px;
+        margin-bottom: 10px;
+        font-size: 1.2rem;
+        font-weight: 500;
+      }
+
+      p {
+        font-size: 1.1rem;
+        line-height: 1.7;
+        margin-bottom: 18px;
+        color: #444;
+      }
+
+      /* 키워드, 지역명 리스트 */
+      .keywords-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 15px;
+        list-style: none;
+        padding: 0;
+      }
+      .keywords-list li {
+        background-color: #e0f2f1;
+        color: #004d40;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        cursor: pointer; /* 클릭 가능한 요소임을 시각적으로 표현 */
+        transition: background-color 0.3s ease;
+      }
+      .keywords-list li:hover {
+        background-color: #c8e6c9;
+      }
+
+      /* CTA 버튼 디자인 */
+      .cta-button {
+        display: inline-block;
+        background-color: #388e3c;
+        color: white;
+        padding: 16px 32px;
+        font-size: 1.3rem;
+        border-radius: 30px;
+        font-weight: 700;
+        text-align: center;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        margin-top: 25px;
+        border: none;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        text-decoration: none;
+      }
+      .cta-button:hover, .cta-button:focus {
+        background-color: #2e7d32;
+      }
+
+      /* 표 스타일 */
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+        font-size: 1.05rem;
+      }
+      th, td {
+        border: 1px solid #ddd;
+        padding: 12px;
+        text-align: left;
+      }
+      th {
+        background-color: #f5f5f5;
+        color: #333;
+        font-weight: 600;
+      }
+      tbody tr:nth-child(even) {
+        background-color: #f9f9f9;
+      }
+
+      /* 폼 스타일 */
+      .inquiry-form {
+        background-color: #f7f7f7;
+        padding: 30px;
+        border-radius: 8px;
+        border: 1px solid #e0e0e0;
+        margin-top: 30px;
+      }
+      .inquiry-form label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: #444;
+      }
+      .inquiry-form input[type="text"],
+      .inquiry-form input[type="email"],
+      .inquiry-form input[type="tel"],
+      .inquiry-form select,
+      .inquiry-form textarea {
+        width: calc(100% - 20px);
+        padding: 12px;
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 1rem;
+      }
+      .inquiry-form button {
+        background-color: #004d40;
+        color: white;
+        padding: 15px 25px;
+        border: none;
+        border-radius: 6px;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+      .inquiry-form button:hover {
+        background-color: #00332a;
+      }
+
+      /* 반응형 디자인 */
+      @media (max-width: 768px) {
+        header h1 {
+          font-size: 2rem;
+        }
+        nav ul {
+          gap: 15px;
+          flex-wrap: wrap;
+        }
+        nav ul li a {
+          font-size: 1rem;
+          padding: 8px 10px;
+        }
+        main {
+          margin: 20px auto;
+          padding: 0 15px;
+        }
+        h2 {
+          font-size: 1.8rem;
+          padding-left: 10px;
+        }
+        h3 {
+          font-size: 1.4rem;
+        }
+        p {
+          font-size: 1rem;
+          line-height: 1.6;
+        }
+        .cta-button {
+          width: 100%;
+          font-size: 1.1rem;
+          padding: 15px 0;
+        }
+        .inquiry-form input[type="text"], .inquiry-form input[type="tel"] {
+          width: 100%;
+        }
+      }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>서울이삿짐센터 | 서울 전 지역 이사 서비스 전문가</h1>
+        <nav aria-label="주요 메뉴">
+            <ul>
+                <li><a href="#service-intro">서비스 안내</a></li>
+                <li><a href="#local-coverage">서울 지역 이사</a></li>
+                <li><a href="#checklist">이사 체크리스트</a></li>
+                <li><a href="#keywords">키워드 분석</a></li>
+                <li><a href="#contact">견적 문의</a></li>
+            </ul>
+        </nav>
+    </header>
     <main>
-      <h1>Home page</h1>
+        <!-- 인트로 섹션 -->
+        <section id="service-intro">
+            <h2>서울이삿짐센터, 2026년 이사 트렌드를 선도합니다</h2>
+            <p><strong>서울이삿짐센터</strong>는 서울특별시 전 지역을 아우르는 전문 이사 서비스를 제공합니다. 변화하는 서울의 주거 환경과 이사 문화에 맞춰 2026년 최신 트렌드를 반영한 맞춤형 이사 솔루션을 제공하며, 고객님의 소중한 이사를 안전하고 신속하게 책임집니다. 서울의 복잡한 교통 상황, 다양한 주거 형태(아파트, 빌라, 원룸, 오피스텔)에 대한 깊은 이해를 바탕으로 최적화된 이사 계획을 수립합니다.</p>
+            <p>특히, 서울 이사 과정에서 발생할 수 있는 모든 변수를 예측하고 대응하는 전문 인력 배치와 최첨단 이사 장비를 통해 만족도 높은 서비스를 구현하고 있습니다. 단순한 짐 운반을 넘어, 고객님의 새로운 시작을 위한 완벽한 파트너가 되는 것이 저희 서울이삿짐센터의 목표입니다.</p>
+            <a href="#contact" class="cta-button" aria-label="무료 견적 상담 받기">지금 바로 무료 견적 받기</a>
+        </section>
+
+        <!-- 서비스 상세 섹션 -->
+        <section id="detailed-service">
+            <h2>전문 분야별 맞춤 이사 서비스</h2>
+            <p>서울이삿짐센터는 고객님의 상황에 맞는 다양한 이사 형태를 제공합니다. 각각의 서비스는 서울 지역 이사의 특성을 고려하여 체계적으로 설계되었습니다.</p>
+
+            <h3>1. 프리미엄 포장이사 (Full Packing Service)</h3>
+            <p>서울 포장이사는 이사의 모든 과정을 전문가가 책임지는 서비스입니다. 고객님은 손 하나 까딱할 필요 없이 편안하게 이사 당일을 맞이하실 수 있습니다. 포장부터 운송, 정리정돈, 청소까지 원스톱으로 제공되며, 특히 강남, 서초, 송파 등 고가 아파트 단지가 밀집한 지역에서 선호도가 높습니다. 2026년형 프리미엄 서비스는 친환경 포장재 사용과 짐 배치 시 공간 컨설팅을 추가하여 만족도를 높였습니다.</p>
+            <p><strong>포장이사 핵심 과정:</strong></p>
+            <ul>
+                <li><strong>포장 작업:</strong> 주방 식기류, 의류, 가구, 가전제품 등 물품별 특성에 맞는 전문 포장재 사용.</li>
+                <li><strong>운반 및 운송:</strong> 숙련된 팀원 배치와 사다리차, 무진동 차량 등 최적의 장비 활용.</li>
+                <li><strong>정리 및 배치:</strong> 이사 전 협의된 배치 계획에 따라 짐 정리 및 가구 재배치.</li>
+                <li><strong>마무리 청소:</strong> 바닥 청소, 쓰레기 수거 등 마무리 서비스 제공.</li>
+            </ul>
+
+            <h3>2. 실속형 일반이사 (Standard Moving Service)</h3>
+            <p>짐이 많지 않거나 이사 비용을 절감하고자 하는 분들을 위한 서비스입니다. 고객님께서 직접 포장과 정리정돈을 담당하시고, 서울이삿짐센터는 운반과 운송만을 담당합니다. 마포, 영등포, 구로 등 1~2인 가구 밀집 지역의 원룸이나 오피스텔 이사에 적합하며, 합리적인 가격으로 신속한 이사가 가능합니다. 꼼꼼한 고객님께 최적의 선택이 될 수 있습니다.</p>
+
+            <h3>3. 서울 원룸/소형 이사</h3>
+            <p>대학생이나 사회 초년생이 많은 관악구, 동대문구, 성북구 등지에서 자주 발생하는 소규모 이사입니다. 용달 차량을 이용한 합리적인 이사 비용을 제공하며, 짐의 양에 따라 1톤, 1.2톤, 2.5톤 차량 선택이 가능합니다. 짐 보관이 필요한 경우 보관 이사 서비스도 함께 제공합니다.</p>
+
+            <h3>4. 사무실/기업 이사</h3>
+            <p>기업의 중요 문서와 전산 장비를 안전하게 이전하는 전문 서비스입니다. 여의도, 강남 테헤란로, 종로 등 오피스 밀집 지역의 특성을 고려하여 주말 및 야간 이사를 통해 업무 공백을 최소화합니다. 파티션, OA 기기 분해 및 재설치 전문가가 팀에 포함되어 있어 효율적인 이사 진행이 가능합니다.</p>
+        </section>
+
+        <!-- SEO 최적화: 서울 지역별 키워드 및 전문성 강화 -->
+        <section id="local-coverage">
+            <h2>서울 전 지역을 커버하는 지역 맞춤 이사 서비스</h2>
+            <p>서울은 25개 구로 이루어진 거대 도시로, 각 지역마다 주거 형태, 교통 환경, 이사 수요에 차이가 있습니다. <strong>서울이삿짐센터</strong>는 각 지역의 특성을 완벽히 분석하여 최적의 이사 솔루션을 제공합니다.</p>
+
+            <h3>강남, 서초, 송파 지역 이사 (강남 3구)</h3>
+            <p>강남구, 서초구, 송파구는 서울에서도 가장 높은 이사 수요와 프리미엄 이사 서비스를 요구하는 지역입니다. 타워팰리스, 잠실 롯데월드타워, 반포자이 등 초고층 아파트 단지 이사가 잦아 고층 작업에 능숙한 전문가 팀이 배치됩니다. 이 지역의 복잡한 지하 주차장 진입 및 까다로운 관리사무소 규정을 준수하며, 명품 가구 및 미술품 운송에 대한 특별 노하우를 보유하고 있습니다.</p>
+            <ul>
+                <li><strong>주요 키워드:</strong> 강남구 포장이사, 서초구 이사비용, 송파구 이사전문, 반포 이사, 개포동 이사</li>
+                <li><strong>특징:</strong> 프리미엄 포장이사 수요 높음, 고가 짐 운송 전문, 아파트 단지 규정 완벽 준수.</li>
+            </ul>
+
+            <h3>강서, 영등포, 마포 지역 이사 (서부/서남부)</h3>
+            <p>여의도, 마곡 지구, 상암동 등 업무 단지와 주거 단지가 혼합된 지역입니다. 영등포와 마포는 재개발/재건축으로 인한 이주 수요가 많아 일반이사부터 보관이사까지 다양한 서비스가 필요합니다. 특히 강서구 마곡지구는 대단지 아파트와 오피스텔이 혼재해 있어 짐 보관이사 및 소형 이사 수요가 꾸준히 증가하고 있습니다. 서울이삿짐센터는 이 지역의 특성에 맞춰 신속한 운송과 정확한 짐 정리 서비스를 제공합니다.</p>
+
+            <h3>강북, 노원, 도봉 지역 이사 (강북권)</h3>
+            <p>강북구, 노원구, 도봉구 등 강북권은 상대적으로 주택가와 빌라 밀집 지역이 많아 사다리차 접근이 어려운 경우가 있습니다. <strong>서울이삿짐센터</strong>는 이러한 환경에 최적화된 맞춤형 장비와 숙련된 팀원을 투입하여 안전하게 이사를 진행합니다. 좁은 골목길이나 계단 작업이 필요한 경우에도 추가 인력 배치로 완벽한 이사를 보장합니다. 이사 견적 시 현장 답사를 통해 정확한 환경 분석을 제공합니다.</p>
+
+            <h3>동대문, 성동, 광진 지역 이사 (동부권)</h3>
+            <p>서울의 동부권은 대학가와 상업지구가 발달한 곳이 많습니다. 동대문구는 특히 재래시장 및 도소매 상가가 많아 상업 이사 수요가 높고, 광진구는 신축 아파트와 낡은 빌라가 공존하여 다양한 이사 형태에 대한 대응력이 중요합니다. 이 지역에서는 주거 이사 외에도 사무실 이전, 매장 이사 등의 수요가 많아 전문성이 요구됩니다.</p>
+        </section>
+
+        <!-- SEO 최적화: 이사 준비 체크리스트 (정보성 콘텐츠) -->
+        <section id="checklist">
+            <h2>2026년 이사 준비 체크리스트: 서울 이사, 완벽하게 준비하는 팁</h2>
+            <p>이사 경험이 많지 않은 분들도 완벽하게 이사를 준비할 수 있도록 <strong>서울이삿짐센터</strong>가 단계별 체크리스트를 제공합니다. 이사 당일의 혼란을 줄이고 비용을 절감하는 데 도움이 될 것입니다.</p>
+
+            <h3>1. 이사 2~4주 전 준비 사항</h3>
+            <ul>
+                <li><strong>이사 날짜 확정:</strong> 손 없는 날을 피하면 이사 비용을 절감할 수 있습니다. <a href="https://www.nso.go.kr/index.do" target="_blank">통계청</a> 자료에 따르면 이사 수요가 몰리는 특정 기간을 피하는 것이 중요합니다.</li>
+                <li><strong>이사 견적 비교:</strong> 최소 3곳 이상의 이사업체에 방문 견적을 받습니다. 전화 견적보다는 방문 견적이 정확하며, <a href="https://www.kca.go.kr/consumer/main.do" target="_blank">한국소비자원</a>에서 제공하는 표준 약관을 확인하여 계약서를 작성합니다.</li>
+                <li><strong>불필요한 짐 정리:</strong> 버릴 가구, 헌 옷, 사용하지 않는 물건 등을 미리 정리하여 이사 짐의 양을 줄입니다.</li>
+                <li><strong>각종 서비스 신청:</strong> 이사 당일 필요한 인터넷, TV, 정수기 이전 설치 예약을 진행합니다.</li>
+            </ul>
+
+            <h3>2. 이사 1주일 전 준비 사항</h3>
+            <ul>
+                <li><strong>이사 업체 최종 계약:</strong> 계약 내용을 꼼꼼히 확인하고, 혹시 모를 파손에 대비하여 이사 배상 책임 보험 가입 여부를 확인합니다.</li>
+                <li><strong>주소 이전 신고:</strong> 우체국을 통해 주소 이전 신고를 하면 3개월간 우편물을 새 주소로 받아볼 수 있습니다. <a href="https://www.epost.go.kr/" target="_blank">우정사업본부</a> 홈페이지에서 간편하게 신청 가능합니다.</li>
+                <li><strong>각종 공과금 정산:</strong> 도시가스, 전기, 수도 요금을 정산합니다. 특히 도시가스는 기사 방문이 필요하므로 미리 예약해야 합니다.</li>
+            </ul>
+
+            <h3>3. 이사 당일 및 이후 처리 사항</h3>
+            <ul>
+                <li><strong>관리비 정산:</strong> 이사 가는 집의 관리사무소에 방문하여 관리비를 정산합니다.</li>
+                <li><strong>전입신고 및 확정일자:</strong> 전입신고는 <a href="https://www.gov.kr/main?a=AA020Info" target="_blank">정부24</a> 홈페이지에서 온라인으로 처리할 수 있습니다. 전세나 월세 거주자는 전입신고 시 확정일자를 받아야 법적 보호를 받을 수 있습니다.</li>
+                <li><strong>가구 배치 확인:</strong> 이사 완료 후 짐 정리 시 파손된 부분이 없는지 꼼꼼하게 확인하고 배치합니다.</li>
+            </ul>
+        </section>
+
+        <!-- SEO 최적화: 이사 비용 절감 팁 및 기타 정보 (정보성 콘텐츠) -->
+        <section id="cost-tips">
+            <h2>이사 비용 절감 노하우와 기타 정보</h2>
+            <p><strong>서울이삿짐센터</strong>는 고객 만족을 위해 합리적인 비용을 제안합니다. 다음 팁들을 활용하면 이사 비용을 더욱 절약할 수 있습니다.</p>
+
+            <h3>1. 비수기 이사 활용하기</h3>
+            <p>이사 수요가 몰리는 3월~5월과 9월~11월, 그리고 주말과 '손 없는 날'을 피하면 이사 비용을 크게 절감할 수 있습니다. 2026년 이사 계획을 세울 때, 이러한 날짜를 피하고 평일에 이사를 진행하는 것이 유리합니다. 특히 서울 외곽 지역이나 강북 지역 이사의 경우, 비수기 요금이 더욱 크게 적용될 수 있습니다.</p>
+
+            <h3>2. 견적 시 정확한 짐 정보 제공</h3>
+            <p>정확한 견적을 위해 이사 업체에 짐의 양, 특이사항(고가품, 대형 가구, 피아노 등)을 솔직하게 알려야 합니다. 짐의 양이 견적보다 많아지면 추가 비용이 발생할 수 있으므로, 미리 짐 정리를 마친 후 견적을 받는 것이 좋습니다.</p>
+
+            <h3>3. 이삿짐 배상책임보험 확인</h3>
+            <p>이삿짐 운송 중 파손이나 분실이 발생할 경우를 대비하여 이사 업체가 배상책임보험에 가입되어 있는지 확인해야 합니다. 이는 고객님의 재산을 보호하는 중요한 안전장치입니다. <a href="https://namu.wiki/w/%EC%9D%B4%EC%82%AC%EC%B0%A8%EC%96%B4%EC%9D%B4" target="_blank">나무위키</a> 이사 관련 정보에서도 이사 전 보험 확인의 중요성이 강조됩니다.</p>
+        </section>
+
+        <!-- SEO 최적화: 키워드 리스트 (자동완성 및 연관 키워드) -->
+        <section id="keywords">
+            <h2>서울이삿짐센터 관련 검색 키워드 분석</h2>
+            <p><strong>서울이삿짐센터</strong>와 관련하여 네이버 검색 시 사용자들이 자주 찾는 키워드 목록입니다. 이러한 키워드를 통해 고객님의 다양한 검색 의도를 충족시키고 있습니다.</p>
+
+            <h3>네이버 자동완성 키워드 목록</h3>
+            <ul class="keywords-list" aria-label="네이버 자동완성 키워드 목록">
+                <li>서울이삿짐센터</li>
+                <li>서울 이사 업체 추천</li>
+                <li>서울 포장이사 비용</li>
+                <li>강남구 이사 견적</li>
+                <li>서울 원룸이사 가격</li>
+                <li>서울 사무실이사 전문</li>
+                <li>마포구 포장이사 잘하는 곳</li>
+                <li>서울 짐 보관 서비스</li>
+            </ul>
+
+            <h3>네이버 연관 검색어 키워드 목록</h3>
+            <ul class="keywords-list" aria-label="네이버 연관 검색어 목록">
+                <li>이사비용 절감 노하우</li>
+                <li>안전한 이사 준비</li>
+                <li>이사 당일 체크리스트</li>
+                <li>가구 배치 서비스</li>
+                <li>포장이사 업체 선정 기준</li>
+                <li>이사 후 청소 업체</li>
+                <li>서울 이사 잘하는 곳 후기</li>
+            </ul>
+        </section>
+
+        <!-- 문의 및 견적 요청 섹션 (체류 시간 증대를 위한 폼 포함) -->
+        <section id="contact">
+            <h2>서울 이사 무료 견적 및 상담 요청</h2>
+            <p><strong>서울이삿짐센터</strong>는 고객님의 이사 환경과 요구 사항을 정확히 파악하여 합리적이고 투명한 견적을 제공합니다. 아래 양식을 작성해 주시면 전문 상담원이 신속하게 연락드리겠습니다. 이사 견적 문의는 무료이며, 고객님의 정보를 안전하게 보호합니다.</p>
+
+            <form action="#" method="post" class="inquiry-form" aria-label="이사 견적 문의 양식">
+                <label for="name">성함*</label>
+                <input type="text" id="name" name="name" placeholder="이름을 입력해주세요" required>
+
+                <label for="phone">연락처*</label>
+                <input type="tel" id="phone" name="phone" placeholder="010-xxxx-xxxx" required>
+
+                <label for="moving-type">이사 종류*</label>
+                <select id="moving-type" name="moving-type" required>
+                    <option value="">이사 종류 선택</option>
+                    <option value="포장이사">포장이사</option>
+                    <option value="일반이사">일반이사</option>
+                    <option value="원룸이사">원룸이사</option>
+                    <option value="사무실이사">사무실이사</option>
+                    <option value="보관이사">보관이사</option>
+                </select>
+
+                <label for="start-address">출발지 주소 (서울)</label>
+                <input type="text" id="start-address" name="start-address" placeholder="예: 서울특별시 강남구 역삼동">
+
+                <label for="end-address">도착지 주소</label>
+                <input type="text" id="end-address" name="end-address" placeholder="예: 서울특별시 송파구 잠실동">
+
+                <label for="moving-date">희망 이사 날짜</label>
+                <input type="text" id="moving-date" name="moving-date" placeholder="예: 2026년 5월 10일 (이사일정 미정시 생략 가능)">
+
+                <label for="message">문의 사항 (짐의 양, 특이사항 등 상세 기재)</label>
+                <textarea id="message" name="message" rows="5" placeholder="이사 짐의 대략적인 양(ex. 24평 아파트), 추가 요청 사항 등을 기재해 주세요."></textarea>
+
+                <button type="submit">견적 문의 신청하기</button>
+            </form>
+            <p style="text-align: center; margin-top: 20px;">전화 상담: <a href="tel:+82-2-1234-5678" style="font-size: 1.2rem; font-weight: bold;">+82-2-1234-5678</a></p>
+        </section>
     </main>
-  </body>
+    <footer>
+        <p>서울이삿짐센터 | 서울특별시 | 대표: 홍길동 | 사업자등록번호: 123-45-67890</p>
+        <p>&copy; 2026 서울이삿짐센터. All rights reserved.</p>
+    </footer>
+</body>
 </html>
